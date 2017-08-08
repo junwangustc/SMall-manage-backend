@@ -1,2 +1,5 @@
-# SMall-manage-backend
-基于golang restful API的社区超市电商后台管理系统后端
+比邻社区电商APP后台管理系统后端
+===============================
+介绍
+-----------------------
+1.本项目主要基于golang，基于AutoRest的基础之上大部分自动化生成后端的restful API
