@@ -18,7 +18,7 @@ type Server struct {
 
 func (s *Server) Open() error {
 	var err error
-	s.Db, err = sql.Open("mysql", "root:12345@tcp(127.0.0.1:3306)/bling")
+	s.Db, err = sql.Open("mysql", "root:12345@tcp(127.0.0.1:3306)/bling?parseTime=true")
 	if err != nil {
 		log.Println(err)
 		return err
@@ -32,26 +32,26 @@ func (s *Server) Open() error {
 	go func() {
 		router := gin.Default()
 		//=======ADD ROUTER
-		router.GET("/menu_classify/:id", func(c *gin.Context) {
+		router.GET("/api/v1/menu_classify/:id", func(c *gin.Context) {
 			GetMenu_classify(c)
 		})
-		router.GET("/menu_classifys", func(c *gin.Context) {
+		router.GET("/api/v1/menu_classifys", func(c *gin.Context) {
 			GetMenu_classifys(c)
 		})
-		router.GET("/menu_classifys/pages", func(c *gin.Context) {
-			GetMenu_classifysPages(c)
+		router.GET("/api/v1/menu_classifys/total", func(c *gin.Context) {
+			GetCountMenu_classifys(c)
 		})
-		router.GET("/menu_classifys/page/:page", func(c *gin.Context) {
+		router.GET("/api/v1/menu_classifys/page/:pageid", func(c *gin.Context) {
 			GetMenu_classifysByPage(c)
 		})
 
-		router.POST("/menu_classify", func(c *gin.Context) {
+		router.POST("/api/v1/menu_classify", func(c *gin.Context) {
 			PostMenu_classify(c)
 		})
-		router.PUT("/menu_classify/:id", func(c *gin.Context) {
+		router.PUT("/api/v1/menu_classify/:id", func(c *gin.Context) {
 			PutMenu_classify(c)
 		})
-		router.DELETE("/menu_classify/:id", func(c *gin.Context) {
+		router.DELETE("/api/v1/menu_classify/:id", func(c *gin.Context) {
 			DeleteMenu_classify(c)
 		})
 
