@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -17,6 +18,15 @@ type Server struct {
 	Cfg    *Config
 	Db     *sql.DB
 	Logger *log.Logger
+}
+
+func SetErrorRespones(c *gin.Context, errorstring string) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": httpError,
+		"error":  errorstring,
+		"result": nil,
+		"count":  0,
+	})
 }
 
 func (s *Server) Open() error {
@@ -56,6 +66,29 @@ func (s *Server) Open() error {
 		})
 		router.DELETE("/api/v1/menu_classify/:id", func(c *gin.Context) {
 			DeleteMenu_classify(c)
+		})
+
+		router.GET("/api/v1/flag_classify/:id", func(c *gin.Context) {
+			GetFlag_classify(c)
+		})
+		router.GET("/api/v1/flag_classifys", func(c *gin.Context) {
+			GetFlag_classifys(c)
+		})
+		router.GET("/api/v1/flag_classifys/total", func(c *gin.Context) {
+			GetCountFlag_classifys(c)
+		})
+		router.GET("/api/v1/flag_classifys/page/:pageid", func(c *gin.Context) {
+			GetFlag_classifysByPage(c)
+		})
+
+		router.POST("/api/v1/flag_classify", func(c *gin.Context) {
+			PostFlag_classify(c)
+		})
+		router.PUT("/api/v1/flag_classify/:id", func(c *gin.Context) {
+			PutFlag_classify(c)
+		})
+		router.DELETE("/api/v1/flag_classify/:id", func(c *gin.Context) {
+			DeleteFlag_classify(c)
 		})
 
 		//======END  ADD ROUTER

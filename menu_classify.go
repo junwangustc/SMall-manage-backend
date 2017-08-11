@@ -19,14 +19,6 @@ type Menu_classify struct {
 	M_datetime time.Time `json:"m_datetime"`
 }
 
-func SetErrorRespones(c *gin.Context, errorstring string) {
-	c.JSON(http.StatusOK, gin.H{
-		"status":  httpError,
-		"error":   errorstring,
-		"results": nil,
-		"count":   0,
-	})
-}
 func GetMenu_classifysByPage(c *gin.Context) {
 	var (
 		menu_classify  Menu_classify
@@ -69,10 +61,10 @@ func GetMenu_classifysByPage(c *gin.Context) {
 	}
 	defer rows.Close()
 	c.JSON(http.StatusOK, gin.H{
-		"status":  httpOK,
-		"error":   "",
-		"results": menu_classifys,
-		"count":   len(menu_classifys),
+		"status": httpOK,
+		"error":  "",
+		"result": menu_classifys,
+		"count":  len(menu_classifys),
 	})
 
 }
