@@ -10,6 +10,9 @@ import (
 
 var db *sql.DB
 
+const httpOK = "OK"
+const httpError = "ERROR"
+
 type Server struct {
 	Cfg    *Config
 	Db     *sql.DB
