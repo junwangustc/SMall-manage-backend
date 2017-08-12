@@ -57,7 +57,6 @@ func (s *Server) Open() error {
 		router.GET("/api/v1/menu_classifys/page/:pageid", func(c *gin.Context) {
 			GetMenu_classifysByPage(c)
 		})
-
 		router.POST("/api/v1/menu_classify", func(c *gin.Context) {
 			PostMenu_classify(c)
 		})
@@ -80,7 +79,6 @@ func (s *Server) Open() error {
 		router.GET("/api/v1/flag_classifys/page/:pageid", func(c *gin.Context) {
 			GetFlag_classifysByPage(c)
 		})
-
 		router.POST("/api/v1/flag_classify", func(c *gin.Context) {
 			PostFlag_classify(c)
 		})
@@ -89,6 +87,28 @@ func (s *Server) Open() error {
 		})
 		router.DELETE("/api/v1/flag_classify/:id", func(c *gin.Context) {
 			DeleteFlag_classify(c)
+		})
+
+		router.GET("/api/v1/commodity/:id", func(c *gin.Context) {
+			GetCommodity(c)
+		})
+		router.GET("/api/v1/commoditys", func(c *gin.Context) {
+			GetCommoditys(c)
+		})
+		router.GET("/api/v1/commoditys/total", func(c *gin.Context) {
+			GetCountCommoditys(c)
+		})
+		router.GET("/api/v1/commoditys/page/:pageid", func(c *gin.Context) {
+			GetCommoditysByPage(c)
+		})
+		router.POST("/api/v1/commodity", func(c *gin.Context) {
+			PostCommodity(c)
+		})
+		router.PUT("/api/v1/commodity/:id", func(c *gin.Context) {
+			PutCommodity(c)
+		})
+		router.DELETE("/api/v1/commodity/:id", func(c *gin.Context) {
+			DeleteCommodity(c)
 		})
 
 		//======END  ADD ROUTER
