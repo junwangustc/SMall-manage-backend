@@ -17,6 +17,7 @@ type Commodity struct {
 	C_datetime      time.Time `json:"c_datetime"`
 	C_detail        string    `json:"c_detail"`
 	C_img           string    `json:"c_img"`
+	C_sku           string    `json:"c_sku"`
 	C_name          string    `json:"c_name"`
 	C_other         string    `json:"c_other"`
 	C_primary_price float64   `json:"c_primary_price"`
@@ -70,7 +71,7 @@ func GetCommoditysByPage(c *gin.Context) {
 	page_start := (pageidInt-1)*page_sizeInt + 1
 	page_end := pageidInt * page_sizeInt
 	var count = 0
-	rows, err := db.Query("select commodity.c_id,menu_classify.m_name,commodity.c_current_price,commodity.c_datetime,commodity.c_detail,commodity.c_img,commodity.c_name,commodity.c_other,commodity.c_primary_price,commodity.c_sales_num,commodity.c_status,commodity.c_stock ,commodity.m_id from commodity left join menu_classify on commodity.m_id=menu_classify.m_id;")
+	rows, err := db.Query("select commodity.c_id,menu_classify.m_name,commodity.c_current_price,commodity.c_datetime,commodity.c_detail,commodity.c_img,commodity.c_sku,commodity.c_name,commodity.c_other,commodity.c_primary_price,commodity.c_sales_num,commodity.c_status,commodity.c_stock ,commodity.m_id from commodity left join menu_classify on commodity.m_id=menu_classify.m_id;")
 	if err != nil {
 		log.Println(err.Error())
 		SetErrorRespones(c, err.Error())
@@ -80,7 +81,7 @@ func GetCommoditysByPage(c *gin.Context) {
 		count++
 		var m_name interface{}
 		if count >= (page_start) && count <= (page_end) {
-			err = rows.Scan(&commodity.C_Id, &m_name, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
+			err = rows.Scan(&commodity.C_Id, &m_name, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_sku, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
 			if err != nil {
 				log.Println(err.Error())
 				rows.Close()
@@ -116,8 +117,8 @@ func GetCommodity(c *gin.Context) {
 		commodity Commodity
 	)
 	id := c.Param("id")
-	row := db.QueryRow("select c_id,c_current_price,c_datetime,c_detail,c_img,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id from commodity where id = ?;", id)
-	err := row.Scan(&commodity.C_Id, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
+	row := db.QueryRow("select c_id,c_current_price,c_datetime,c_detail,c_img,c_sku,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id from commodity where id = ?;", id)
+	err := row.Scan(&commodity.C_Id, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_sku, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
 	if err != nil {
 		// If no results send null
 		c.JSON(http.StatusOK, gin.H{
@@ -144,14 +145,14 @@ func GetCommoditys(c *gin.Context) {
 		commodity  Commodity
 		commoditys []Commodity
 	)
-	rows, err := db.Query("select c_id,c_current_price,c_datetime,c_detail,c_img,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id from commodity;")
+	rows, err := db.Query("select c_id,c_current_price,c_datetime,c_detail,c_img,c_sku,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id from commodity;")
 	if err != nil {
 		log.Println(err.Error())
 		SetErrorRespones(c, err.Error())
 		return
 	}
 	for rows.Next() {
-		err = rows.Scan(&commodity.C_Id, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
+		err = rows.Scan(&commodity.C_Id, &commodity.C_current_price, &commodity.C_datetime, &commodity.C_detail, &commodity.C_img, &commodity.C_sku, &commodity.C_name, &commodity.C_other, &commodity.C_primary_price, &commodity.C_sales_num, &commodity.C_status, &commodity.C_stock, &commodity.M_id)
 		commoditys = append(commoditys, commodity)
 		if err != nil {
 			log.Println(err.Error())
@@ -177,6 +178,7 @@ func PostCommodity(c *gin.Context) {
 	c_datetime := c.PostForm("c_datetime")
 	c_detail := c.PostForm("c_detail")
 	c_img := c.PostForm("c_img")
+	c_sku := c.PostForm("c_sku")
 	c_name := c.PostForm("c_name")
 	c_other := c.PostForm("c_other")
 	c_primary_price := c.PostForm("c_primary_price")
@@ -185,13 +187,13 @@ func PostCommodity(c *gin.Context) {
 	c_stock := c.PostForm("c_stock")
 	m_id := c.PostForm("m_id")
 
-	stmt, err := db.Prepare("insert into commodity (c_current_price,c_datetime,c_detail,c_img,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id) values(?,?,?,?,?,?,?,?,?,?,?);")
+	stmt, err := db.Prepare("insert into commodity (c_current_price,c_datetime,c_detail,c_img,c_sku,c_name,c_other,c_primary_price,c_sales_num,c_status,c_stock,m_id) values(?,?,?,?,?,?,?,?,?,?,?,?);")
 	if err != nil {
 		log.Println(err.Error())
 		SetErrorRespones(c, err.Error())
 		return
 	}
-	_, err = stmt.Exec(c_current_price, c_datetime, c_detail, c_img, c_name, c_other, c_primary_price, c_sales_num, c_status, c_stock, m_id)
+	_, err = stmt.Exec(c_current_price, c_datetime, c_detail, c_img, c_sku, c_name, c_other, c_primary_price, c_sales_num, c_status, c_stock, m_id)
 
 	if err != nil {
 		log.Println(err.Error())
@@ -206,6 +208,8 @@ func PostCommodity(c *gin.Context) {
 	buffer.WriteString(c_detail)
 	buffer.WriteString("  ")
 	buffer.WriteString(c_img)
+	buffer.WriteString("  ")
+	buffer.WriteString(c_sku)
 	buffer.WriteString("  ")
 	buffer.WriteString(c_name)
 	buffer.WriteString("  ")
@@ -239,6 +243,7 @@ func PutCommodity(c *gin.Context) {
 	c_datetime := c.PostForm("c_datetime")
 	c_detail := c.PostForm("c_detail")
 	c_img := c.PostForm("c_img")
+	c_sku := c.PostForm("c_sku")
 	c_name := c.PostForm("c_name")
 	c_other := c.PostForm("c_other")
 	c_primary_price := c.PostForm("c_primary_price")
@@ -247,13 +252,13 @@ func PutCommodity(c *gin.Context) {
 	c_stock := c.PostForm("c_stock")
 	m_id := c.PostForm("m_id")
 
-	stmt, err := db.Prepare("update commodity set c_current_price=?,c_datetime=?,c_detail=?,c_img=?,c_name=?,c_other=?,c_primary_price=?,c_sales_num=?,c_status=?,c_stock=?,m_id=? where c_id= ?;")
+	stmt, err := db.Prepare("update commodity set c_current_price=?,c_datetime=?,c_detail=?,c_img=?,c_sku=?,c_name=?,c_other=?,c_primary_price=?,c_sales_num=?,c_status=?,c_stock=?,m_id=? where c_id= ?;")
 	if err != nil {
 		log.Println(err.Error())
 		SetErrorRespones(c, err.Error())
 		return
 	}
-	_, err = stmt.Exec(c_current_price, c_datetime, c_detail, c_img, c_name, c_other, c_primary_price, c_sales_num, c_status, c_stock, m_id, id)
+	_, err = stmt.Exec(c_current_price, c_datetime, c_detail, c_img, c_sku, c_name, c_other, c_primary_price, c_sales_num, c_status, c_stock, m_id, id)
 	if err != nil {
 		log.Println(err.Error())
 		SetErrorRespones(c, err.Error())
@@ -268,6 +273,7 @@ func PutCommodity(c *gin.Context) {
 	buffer.WriteString(c_detail)
 	buffer.WriteString("  ")
 	buffer.WriteString(c_img)
+	buffer.WriteString(c_sku)
 	buffer.WriteString("  ")
 	buffer.WriteString(c_name)
 	buffer.WriteString("  ")

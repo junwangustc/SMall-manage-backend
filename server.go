@@ -112,6 +112,13 @@ func (s *Server) Open() error {
 		})
 
 		//======END  ADD ROUTER
+
+		//===========APP Restful API
+
+		/*
+			router.GET("/app-api/v1/goods", func(c *gin.Context) {
+				GetGoods(c)
+			})*/
 		router.Run(":3000")
 	}()
 	return nil
