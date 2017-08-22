@@ -115,10 +115,9 @@ func (s *Server) Open() error {
 
 		//===========APP Restful API
 
-		/*
-			router.GET("/app-api/v1/goods", func(c *gin.Context) {
-				GetGoods(c)
-			})*/
+		router.GET("/app-api/v1/classify_commoditys", func(c *gin.Context) {
+			API_GetClassifyCommoditys(c)
+		})
 		router.Run(":3000")
 	}()
 	return nil
