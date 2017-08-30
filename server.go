@@ -111,6 +111,72 @@ func (s *Server) Open() error {
 			DeleteCommodity(c)
 		})
 
+		router.GET("/api/v1/order/:id", func(c *gin.Context) {
+			GetOrder(c)
+		})
+		router.GET("/api/v1/orders", func(c *gin.Context) {
+			GetOrders(c)
+		})
+		router.GET("/api/v1/orders/total", func(c *gin.Context) {
+			GetCountOrders(c)
+		})
+		router.GET("/api/v1/orders/page/:pageid", func(c *gin.Context) {
+			GetOrdersByPage(c)
+		})
+		router.POST("/api/v1/order", func(c *gin.Context) {
+			PostOrder(c)
+		})
+		router.PUT("/api/v1/order/:id", func(c *gin.Context) {
+			PutOrder(c)
+		})
+		router.DELETE("/api/v1/order/:id", func(c *gin.Context) {
+			DeleteOrder(c)
+		})
+
+		router.GET("/api/v1/user/:id", func(c *gin.Context) {
+			GetUser(c)
+		})
+		router.GET("/api/v1/users", func(c *gin.Context) {
+			GetUsers(c)
+		})
+		router.GET("/api/v1/users/total", func(c *gin.Context) {
+			GetCountUsers(c)
+		})
+		router.GET("/api/v1/users/page/:pageid", func(c *gin.Context) {
+			GetUsersByPage(c)
+		})
+		router.POST("/api/v1/user", func(c *gin.Context) {
+			PostUser(c)
+		})
+		router.PUT("/api/v1/user/:id", func(c *gin.Context) {
+			PutUser(c)
+		})
+		router.DELETE("/api/v1/user/:id", func(c *gin.Context) {
+			DeleteUser(c)
+		})
+
+		router.GET("/api/v1/user_addr/:id", func(c *gin.Context) {
+			GetUser_addr(c)
+		})
+		router.GET("/api/v1/user_addrs", func(c *gin.Context) {
+			GetUser_addrs(c)
+		})
+		router.GET("/api/v1/user_addrs/total", func(c *gin.Context) {
+			GetCountUser_addrs(c)
+		})
+		router.GET("/api/v1/user_addrs/page/:pageid", func(c *gin.Context) {
+			GetUser_addrsByPage(c)
+		})
+		router.POST("/api/v1/user_addr", func(c *gin.Context) {
+			PostUser_addr(c)
+		})
+		router.PUT("/api/v1/user_addr/:id", func(c *gin.Context) {
+			PutUser_addr(c)
+		})
+		router.DELETE("/api/v1/user_addr/:id", func(c *gin.Context) {
+			DeleteUser_addr(c)
+		})
+
 		//======END  ADD ROUTER
 
 		//===========APP Restful API
